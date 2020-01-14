@@ -50,11 +50,6 @@
             <version>19.12</version>
             <classifier>jdk16</classifier>
         </dependency>
-        <dependency>
-			 <groupId>fr.opensagres.xdocreport</groupId>
-			 <artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
-			 <version>1.0.0</version>
-		</dependency>
     </dependencies>
 
     <properties>
