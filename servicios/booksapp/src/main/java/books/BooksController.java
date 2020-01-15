@@ -3,6 +3,11 @@ package books;
 import com.aspose.pdf.DocSaveOptions;
 import com.aspose.pdf.Document;
 
+import ws.schild.jave.AudioAttributes;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncodingAttributes;
+import ws.schild.jave.MultimediaObject;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -33,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
@@ -208,6 +214,51 @@ public class BooksController {
     	
     }
     
+    @PostMapping("/convertAudio")
+    public ResponseEntity<Resource> convertAudio(@RequestParam("file") MultipartFile file, @RequestParam("type") String type, HttpServletRequest request){
+    	
+    	 try {    
+    		 
+    		 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+         	int idx = fileName.lastIndexOf('.');
+         	String newName = fileName.substring(0,idx)+"."+type;
+         	InputStream is = file.getInputStream();
+         	
+  		   File source = new File(fileName);		                 
+  		   File target = new File(newName);                                            
+  		       //Audio Attributes            
+  		   Files.copy(is, source.toPath()); 
+  		   AudioAttributes audio = new AudioAttributes();              
+  		   audio.setCodec("libmp3lame");                               
+  		   audio.setBitRate(128000);                                   
+  		   audio.setChannels(2);                                       
+  		   audio.setSamplingRate(44100);                               
+  		                                                               
+  		   //Encoding attributes                                       
+  		   EncodingAttributes attrs = new EncodingAttributes();        
+  		   attrs.setFormat("mp3");                                     
+  		   attrs.setAudioAttributes(audio);                            
+  		                                                               
+  		   //Encode                                                    
+  		   Encoder encoder = new Encoder();                            
+  		   encoder.encode(new MultimediaObject(source), target, attrs);
+  		 InputStream inputStream = new FileInputStream(new File(newName));
+         
+         InputStreamResource resource = new InputStreamResource(inputStream);
+         return ResponseEntity.ok()
+                 .contentType(MediaType.parseMediaType("application/"+type))
+                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")
+                 .body(resource);
+  		   
+  		                                                                
+  		  } catch (Exception ex) {                                      
+  			java.util.logging.Logger.getLogger(BooksController.class.getName()).log(Level.SEVERE, null, ex);
+            return ResponseEntity.badRequest().build();                 
+  		  }  
+    	
+    	
+    	
+    }
     
     
 
