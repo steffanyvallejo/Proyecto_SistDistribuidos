@@ -2,11 +2,16 @@ package books;
 
 import com.aspose.pdf.DocSaveOptions;
 import com.aspose.pdf.Document;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.io.InputStreamResource;
@@ -147,7 +152,7 @@ public class BooksController {
             XWPFDocument document = new XWPFDocument(is);
             PdfOptions options = PdfOptions.create();
             PdfConverter.getInstance().convert(document, out, options);
-                        
+            
             
             InputStream inputStream = new FileInputStream(new File(newName));
             
@@ -167,5 +172,43 @@ public class BooksController {
         }
 
     }
+    
+    
+    @PostMapping("/convertPngTOJpg")
+    public ResponseEntity<Resource> convertImage(@RequestParam("file") MultipartFile file, @RequestParam("type") String type, HttpServletRequest request){
+    	
+    	try {
+    		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        	int idx = fileName.lastIndexOf('.');
+        	String newName = fileName.substring(0,idx)+"."+type;
+        	InputStream is = file.getInputStream();
+        	BufferedImage image = ImageIO.read(is);
+        	
+            BufferedImage result = new BufferedImage(
+                    image.getWidth(),
+                    image.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            result.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
+            OutputStream out = new FileOutputStream(new File(newName));
+            ImageIO.write(result, "jpg", out);
+            InputStream inputStream = new FileInputStream(new File(newName));
+            
+            InputStreamResource resource = new InputStreamResource(inputStream);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/"+type))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")
+                    .body(resource);
+    		
+    	}catch(Exception ex) {
+    		java.util.logging.Logger.getLogger(BooksController.class.getName()).log(Level.SEVERE, null, ex);
+            return ResponseEntity.badRequest().build();
+    	}
+    	
+    	
+    	
+    }
+    
+    
+    
 
 }
