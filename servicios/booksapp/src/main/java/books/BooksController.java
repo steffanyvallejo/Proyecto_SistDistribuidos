@@ -1,7 +1,6 @@
 package books;
 
-import com.aspose.pdf.DocSaveOptions;
-import com.aspose.pdf.Document;
+
 
 import ws.schild.jave.AudioAttributes;
 import ws.schild.jave.Encoder;
@@ -73,76 +72,7 @@ public class BooksController {
         );        
     }
     
-    @PostMapping("/uploadFileTest")
-    public ResponseEntity<Resource> uploadFileTest(@RequestParam("file") MultipartFile file, @RequestParam("type") String type, HttpServletRequest request) {
-
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        System.out.println("########################################3");
-        System.out.println(fileName);
-        System.out.println("########################################3");
-        
-        System.out.println("########################################3");
-        System.out.println(type);
-        System.out.println("########################################3");
-//        String contentType = request.getServletContext().getMimeType(fileName);
-        int idx = fileName.lastIndexOf('.');
-        
-        String newName = fileName.substring(0,idx)+"."+type;
-        
-        System.out.println("########################################3");
-        System.out.println(newName);
-        System.out.println("########################################3");
-        
-        InputStream resp = null;
-        try {
-            resp = file.getInputStream();
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(BooksController.class.getName()).log(Level.SEVERE, null, ex);
-            return ResponseEntity.badRequest().build();
-        }
-        System.out.println("########################################3");
-        System.out.println(resp);
-        System.out.println("########################################3");
-        Document doc = new Document(resp);
-        System.out.println("########################################3");
-        System.out.println(doc);
-        System.out.println("########################################3");
-        DocSaveOptions saveOptions = new DocSaveOptions();
-        saveOptions.setFormat(DocSaveOptions.DocFormat.DocX);
-        System.out.println("########################################3");
-        System.out.println(saveOptions);
-        System.out.println("########################################3");                      
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        System.out.println("########################################3");
-        System.out.println(outStream);
-        System.out.println("########################################3");
-        System.out.println("########################################3");
-        System.out.println(doc);
-        System.out.println("########################################3");
-        doc.save(outStream, saveOptions);
-        System.out.println("########################################3");
-        System.out.println("DESPUES DE DOC.SAVE");
-        System.out.println("########################################3");
-        ByteArrayInputStream inStream = new ByteArrayInputStream(outStream.toByteArray());
-        System.out.println("########################################3");
-        System.out.println(inStream);
-        System.out.println("########################################3");
-        InputStreamResource resource = new InputStreamResource(inStream);
-        System.out.println("########################################3");
-        System.out.println(resource);
-        System.out.println("########################################3");
-//        InputStreamResource resource = new InputStreamResource(resp);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/"+type))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")
-                .body(resource);
-//        return ResponseEntity.ok()
-//              .contentType(MediaType.parseMediaType(contentType))
-//              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-//              .body(resource);
-
-    }
+   
     
     @PostMapping("/convertDocxPdf")
     public ResponseEntity<Resource> convertDocxPdf(@RequestParam("file") MultipartFile file, @RequestParam("type") String type, HttpServletRequest request) {
@@ -159,14 +89,14 @@ public class BooksController {
             PdfOptions options = PdfOptions.create();
             PdfConverter.getInstance().convert(document, out, options);
             
-            
-            InputStream inputStream = new FileInputStream(new File(newName));
+            File docx = new File(newName);
+            InputStream inputStream = new FileInputStream(docx);
             
             InputStreamResource resource = new InputStreamResource(inputStream);
             
 //            IOUtils.copy(inputStream, response.getOutputStream());
 //            response.flushBuffer();
-            
+            docx.delete();
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("application/"+type))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")
@@ -197,9 +127,12 @@ public class BooksController {
             result.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
             OutputStream out = new FileOutputStream(new File(newName));
             ImageIO.write(result, "jpg", out);
-            InputStream inputStream = new FileInputStream(new File(newName));
+            File img = new File(newName);
+            InputStream inputStream = new FileInputStream(img);
+            
             
             InputStreamResource resource = new InputStreamResource(inputStream);
+            img.delete();
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("application/"+type))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")
@@ -245,6 +178,8 @@ public class BooksController {
   		 InputStream inputStream = new FileInputStream(new File(newName));
          
          InputStreamResource resource = new InputStreamResource(inputStream);
+         source.delete();
+         target.delete();
          return ResponseEntity.ok()
                  .contentType(MediaType.parseMediaType("application/"+type))
                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + newName + "\"")

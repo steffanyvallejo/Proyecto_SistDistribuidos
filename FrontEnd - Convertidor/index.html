@@ -53,12 +53,12 @@
 
             <div class="container p-3 mb-2  bg-light text-dark">
                 <div class="row justify-content-center text-center mb-4">
-                    <h4 class="h4 heading">Documentos</h4>
+                    <h4 class="h4 heading">Documento: Word a PDF</h4>
                 </div>
                 <div class="row justify-content-center text-center mb-4">
-                    <form action="http://54.147.106.160:8080/convertDocxPdf" method="POST" enctype="multipart/form-data">
+                    <form action="http://localhost:8080/convertDocxPdf" method="POST" enctype="multipart/form-data">
 
-                        <input type="text" name="type" />
+                        <input type="hidden" name="type" value="pdf" />
                         <p>
 
                             <input type="file" name="file">
@@ -74,14 +74,14 @@
 
             <div class="container p-3 mb-2  bg-light text-dark">
                 <div class="row justify-content-center text-center mb-4">
-                    <h4 class="h4 heading">Imágenes</h4>
+                    <h4 class="h4 heading">Imagen: PNG a JPG</h4>
                 </div>
                 <div class="row justify-content-center text-center mb-4">
-                    <form action="" method="post" enctype="multipart/form-data" target="_blank">
-
+                    <form action="http://localhost:8080/convertPngTOJpg" method="post" enctype="multipart/form-data" target="_blank">
+			<input type="hidden" name="type" value="jpg" />
                         <p>
 
-                            <input type="file" name="archivosubido">
+                            <input type="file" name="file">
 
                             <input type="submit" value="Convertir">
 
@@ -94,14 +94,14 @@
 
             <div class="container p-3 mb-2  bg-light text-dark">
                 <div class="row justify-content-center text-center mb-4">
-                    <h4 class="h4 heading">Videos</h4>
+                    <h4 class="h4 heading">Audio: WAV a MP3</h4>
                 </div>
                 <div class="row justify-content-center text-center mb-4">
-                    <form action="" method="post" enctype="multipart/form-data" target="_blank">
-
+                    <form action="http://localhost:8080/convertAudio" method="post" enctype="multipart/form-data" target="_blank">
+			<input type="hidden" name="type" value="mp3" />
                         <p>
 
-                            <input type="file" name="archivosubido">
+                            <input type="file" name="file">
 
                             <input type="submit" value="Convertir">
 
