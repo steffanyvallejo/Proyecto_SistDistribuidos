@@ -32,11 +32,7 @@
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.0</version>
         </dependency>
-        <dependency>
-			 <groupId>fr.opensagres.xdocreport</groupId>
-			 <artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
-			 <version>1.0.0</version>
-		</dependency>
+        
     </dependencies>
 
     <properties>
