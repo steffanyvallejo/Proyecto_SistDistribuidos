@@ -1,0 +1,30 @@
+{
+  "serviceName": "Convert-Service",
+  "cluster": "Convert-Cluster",
+  "launchType": "FARGATE",
+  "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 0
+  },
+  "desiredCount": 1,
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "assignPublicIp": "DISABLED",
+      "securityGroups": [
+        "sg-08c5301da114bd404"
+      ],
+      "subnets": [
+        "subnet-0f9de6fe1dbad1383",
+        "subnet-010624429dc2bf3d1"
+      ]
+    }
+  },
+  "taskDefinition": "convertservice",
+  "loadBalancers": [
+    {
+      "containerName": "Convert-Service",
+      "containerPort": 8080,
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:752993447773:targetgroup/MythicalMysfits-TargetGroup/b99ac4364bde2ffb"
+    }
+  ]
+}

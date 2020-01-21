@@ -1,0 +1,32 @@
+{
+  "family": "convertservice",
+  "cpu": "256",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "arn:aws:iam::752993447773:role/ConvertStack-EcsServiceRole-10KKPSLTZ05LR",
+  "taskRoleArn": "arn:aws:iam::752993447773:role/ConvertStack-ECSTaskRole-1UPI1B2MCDC8V",
+  "containerDefinitions": [
+    {
+      "name": "Convert-Service",
+      "image": "752993447773.dkr.ecr.us-east-1.amazonaws.com/convert/service:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "http"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "convert-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "awslogs-convert-service"
+        }
+      },
+      "essential": true
+    }
+  ]
+}
