@@ -9,8 +9,3 @@
 *.jar
 *.war
 *.ear
-/.gitignore
-/Dockerfile
-/README.md
-/pom.xml
-/sheep.jpg
