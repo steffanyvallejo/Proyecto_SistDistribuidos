@@ -29,6 +29,11 @@
 	    <type>pom</type>
 	</dependency>
 	<dependency>
+		 <groupId>ws.schild</groupId>
+		 <artifactId>jave-all-deps</artifactId>
+		 <version>2.7.3</version>
+	</dependency>
+	<dependency>
     <groupId>com.aspose</groupId>
     <artifactId>aspose-slides</artifactId>
     <version>19.12</version>
